@@ -49,5 +49,3 @@ app.*.map.json
 
 lib/infrastructure/api_key.dart
 
-#git ignore added
-.gitignore
