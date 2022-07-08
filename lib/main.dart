@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/domain/core/dependencies_injection/injectable.dart';
 import 'package:netflix/presentation/main_page/main_page_scree.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureInjection();
   runApp(const MyApp());
 }
 
