@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/new_and_hot/widgets/coming_soon.dart';
@@ -16,10 +15,9 @@ class NewHotScreen extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: const Text(
               'New & Hot',
-              style: GoogleFonts.signikaNegative(
-                  fontSize: 26, fontWeight: FontWeight.w800),
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
             ),
             actions: [
               IconButton(

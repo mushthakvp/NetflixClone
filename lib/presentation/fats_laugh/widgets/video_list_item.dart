@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/presentation/fats_laugh/functions/functions.dart';
 import 'package:netflix/presentation/widgets/space.dart';
@@ -35,7 +34,8 @@ class VideoListItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(Ffunction.instance.image),
+                      backgroundImage:
+                          const AssetImage('assets/images/squidGame.jpg'),
                       backgroundColor: greyColor.withOpacity(.3),
                       radius: 30,
                     ),
@@ -74,7 +74,6 @@ class VideoActions extends StatelessWidget {
           space(he: 5),
           Text(
             name,
-            style: GoogleFonts.signikaNegative(),
           )
         ],
       ),

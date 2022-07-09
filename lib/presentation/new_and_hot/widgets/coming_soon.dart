@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/images/images.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
 class ComingSoon extends StatelessWidget {
@@ -62,8 +62,7 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         image: const DecorationImage(
-                          image: NetworkImage(
-                              'https://images6.alphacoders.com/119/1191374.jpg'),
+                          image: AssetImage(squidgame),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -85,10 +84,10 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                 space(),
                 Row(
                   children: [
-                    FittedBox(
+                    const FittedBox(
                       child: Text(
                         'Squid Game',
-                        style: GoogleFonts.indieFlower(
+                        style: TextStyle(
                             fontSize: 35,
                             letterSpacing: -2,
                             fontWeight: FontWeight.w900),
@@ -115,9 +114,8 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                   ],
                 ),
                 space(),
-                Text(
+                const Text(
                   'Coming on Friday',
-                  style: GoogleFonts.signikaNegative(),
                 ),
                 space(),
                 Row(
@@ -147,17 +145,16 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                   ],
                 ),
                 space(he: 5),
-                Text(
+                const Text(
                   'Squid Game',
-                  style: GoogleFonts.signikaNegative(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 space(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
                   child: Text(
                     'Landing the lead in the school musical is a dream come truee for Jodi untill the pressure sends her confidence - and her relation ship into a tailspin',
-                    style: GoogleFonts.signikaNegative(),
+                    style: TextStyle(),
                   ),
                 )
               ],

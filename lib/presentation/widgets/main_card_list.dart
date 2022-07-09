@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/core/const.dart';
 
-const image =
-    'https://m.media-amazon.com/images/M/MV5BYjJhYmM3MWQtMWM3NC00MWQyLTliZWItNDI3NGYwZTU0MDAyXkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_.jpg';
+const image = 'assets/images/stranger.jpeg';
 
 class MainCardItems extends StatelessWidget {
   const MainCardItems({

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
@@ -14,8 +13,7 @@ class AppBarWidgets extends StatelessWidget {
         space(),
         Text(
           name,
-          style: GoogleFonts.signikaNegative(
-              fontSize: 26, fontWeight: FontWeight.w800),
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
         ),
         const Spacer(),
         IconButton(

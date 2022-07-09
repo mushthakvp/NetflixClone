@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/presentation/home/widgets/main_backround_image.dart';
 import 'package:netflix/presentation/home/widgets/number_card.dart';
@@ -137,6 +139,8 @@ class ContentAndCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<DownloadsBloc>(context)
+        .add(const DownloadsEvent.getDownloadsImage());
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

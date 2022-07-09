@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/domain/core/dependencies_injection/injectable.dart';
 import 'package:netflix/presentation/main_page/main_page_scree.dart';
@@ -14,18 +16,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(backgroundColor: blackColor),
-        scaffoldBackgroundColor: blackColor,
-        backgroundColor: blackColor,
-        textTheme: const TextTheme(
-          bodyText1: TextStyle(color: whiteColor),
-          bodyText2: TextStyle(color: whiteColor),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<DownloadsBloc>(),
         ),
+      ],
+      child: MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(backgroundColor: blackColor),
+          scaffoldBackgroundColor: blackColor,
+          backgroundColor: blackColor,
+          textTheme: const TextTheme(
+            bodyText1: TextStyle(color: whiteColor),
+            bodyText2: TextStyle(color: whiteColor),
+          ),
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const MainPageScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MainPageScreen(),
     );
   }
 }

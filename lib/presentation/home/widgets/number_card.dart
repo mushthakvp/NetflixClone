@@ -36,8 +36,7 @@ class NumberContentCards extends StatelessWidget {
   }
 }
 
-const image =
-    'https://m.media-amazon.com/images/M/MV5BYjJhYmM3MWQtMWM3NC00MWQyLTliZWItNDI3NGYwZTU0MDAyXkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_.jpg';
+const image = 'assets/images/danGal.jpg';
 
 class NumberCard extends StatelessWidget {
   final int index;

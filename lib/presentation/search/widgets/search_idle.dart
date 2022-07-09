@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 import 'package:netflix/presentation/widgets/title_widget.dart';
@@ -51,10 +50,10 @@ class TopSearchItem extends StatelessWidget {
           ),
         ),
         space(),
-        Expanded(
+        const Expanded(
           child: Text(
             'Movie Name',
-            style: GoogleFonts.signikaNegative(fontSize: 18),
+            style: TextStyle(fontSize: 18),
           ),
         ),
         const Icon(

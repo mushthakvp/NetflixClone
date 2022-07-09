@@ -8,8 +8,8 @@ class Dfunction {
   }
 
   final images = [
-    'https://m.media-amazon.com/images/M/MV5BYjJhYmM3MWQtMWM3NC00MWQyLTliZWItNDI3NGYwZTU0MDAyXkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_.jpg',
-    'https://assets-prd.ignimgs.com/2022/05/12/stranger-things-4-poster-1652364986162.jpeg',
-    'https://i0.wp.com/bloody-disgusting.com/wp-content/uploads/2022/06/NPE_Char1Sht_Steven_1080x1920pxH_RGB_3.jpg'
+    'https://images.news18.com/ibnlive/uploads/2019/10/Movies-First-Look-Sanjay-Dutt-as-Ahmad-Shah-Abdali-in-Panipat.jpg',
+    'https://4.bp.blogspot.com/-dqkWYLpZ-Rg/XEGiQ8sFVXI/AAAAAAAAXO4/eSW56lyAYOMYMm2yacOT1qvx_raMD7w4wCLcBGAs/s1600/indian-2-upcoming-movie-poster-star-cast-release-date-mt-wiki.jpg',
+    'https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg'
   ];
 }

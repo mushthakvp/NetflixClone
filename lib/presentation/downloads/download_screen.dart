@@ -1,8 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/downloads/functions/functions.dart';
 import 'package:netflix/presentation/widgets/app_bar_widget.dart';
 import 'package:netflix/presentation/widgets/space.dart';
@@ -88,63 +89,72 @@ class SectionTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      BlocProvider.of<DownloadsBloc>(context)
+          .add(const DownloadsEvent.getDownloadsImage());
+    });
+
     final Size mediaSize = MediaQuery.of(context).size;
     return Column(
       children: [
         space(he: 20),
-        Center(
+        const Center(
           child: Text(
             'Introducing Downloads for you',
-            style: GoogleFonts.signikaNegative(
+            style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
+        const Padding(
+          padding: EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 10,
           ),
           child: Text(
             'Well download a personalized selection of movies and shows for you, so there is always somthing to watch on your device',
             textAlign: TextAlign.center,
-            style: GoogleFonts.signikaNegative(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: greyColor,
             ),
           ),
         ),
-        SizedBox(
-          width: mediaSize.width,
-          height: mediaSize.width,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAvatar(
-                backgroundColor: greyColor.withOpacity(.25),
-                radius: mediaSize.width * .33,
+        BlocBuilder<DownloadsBloc, DownloadState>(
+          builder: (context, states) {
+            return SizedBox(
+              width: mediaSize.width,
+              height: mediaSize.width,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: greyColor.withOpacity(.25),
+                    radius: mediaSize.width * .33,
+                  ),
+                  DownloadsImageWidget(
+                    size: Size(mediaSize.width * .32, mediaSize.width * .44),
+                    image: '$imageUppendUrl${states.downloads[10].posterPath}',
+                    angle: 20,
+                    margin: const EdgeInsets.only(left: 150, top: 20),
+                  ),
+                  DownloadsImageWidget(
+                    size: Size(mediaSize.width * .32, mediaSize.width * .44),
+                    image: Dfunction.instance.images[1],
+                    angle: -20,
+                    margin: const EdgeInsets.only(right: 150, top: 20),
+                  ),
+                  DownloadsImageWidget(
+                    size: Size(mediaSize.width * .36, mediaSize.width * .49),
+                    image: Dfunction.instance.images[2],
+                    margin: const EdgeInsets.only(left: 0),
+                  )
+                ],
               ),
-              DownloadsImageWidget(
-                size: Size(mediaSize.width * .32, mediaSize.width * .44),
-                image: Dfunction.instance.images[0],
-                angle: 20,
-                margin: const EdgeInsets.only(left: 150, top: 20),
-              ),
-              DownloadsImageWidget(
-                size: Size(mediaSize.width * .32, mediaSize.width * .44),
-                image: Dfunction.instance.images[1],
-                angle: -20,
-                margin: const EdgeInsets.only(right: 150, top: 20),
-              ),
-              DownloadsImageWidget(
-                size: Size(mediaSize.width * .36, mediaSize.width * .49),
-                image: Dfunction.instance.images[2],
-                margin: const EdgeInsets.only(left: 0),
-              )
-            ],
-          ),
+            );
+          },
         ),
       ],
     );
@@ -166,9 +176,9 @@ class _SmartDownloads extends StatelessWidget {
           color: whiteColor,
         ),
         space(wi: 10),
-        Text(
+        const Text(
           'Smart Downloads',
-          style: GoogleFonts.signikaNegative(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),

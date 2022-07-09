@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
+import 'package:netflix/images/images.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
 class EveryonesWatching extends StatelessWidget {
@@ -31,9 +31,7 @@ class VideoMainWidget extends StatelessWidget {
         Stack(
           children: [
             Container(
-                height: 200,
-                decoration: boxDecorationImage(
-                    image: 'https://images6.alphacoders.com/119/1191374.jpg')),
+                height: 200, decoration: boxDecorationImage(image: squidgame)),
             Positioned(
               bottom: 10,
               right: 10,
@@ -118,17 +116,16 @@ class VideoCardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Squid Game',
-            style: GoogleFonts.signikaNegative(
-                fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           space(),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
+          const Padding(
+            padding: EdgeInsets.only(right: 10),
             child: Text(
               "This hit sitcom follows the merry misadventures of six 20-something pals as they navigate the pitfalls of work life and love in 1990's Manhattan",
-              style: GoogleFonts.signikaNegative(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ],

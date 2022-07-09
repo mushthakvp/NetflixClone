@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
 
-const bgImage =
-    'https://m.media-amazon.com/images/M/MV5BOWQwOTA1ZDQtNzk3Yi00ZmVmLWFiZGYtNjdjNThiYjJhNzRjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg';
-
 class MainBackgroundImage extends StatelessWidget {
   const MainBackgroundImage({Key? key}) : super(key: key);
 
@@ -15,7 +12,7 @@ class MainBackgroundImage extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 600,
-          decoration: boxDecorationImage(image: bgImage),
+          decoration: boxDecorationImage(image: 'assets/images/paniPat.jpg'),
         ),
         Positioned(
           left: 0,

@@ -10,7 +10,7 @@ BoxDecoration boxDecorationImage(
     color: color,
     borderRadius: BorderRadius.circular(rd),
     image: DecorationImage(
-      image: NetworkImage(image),
+      image: AssetImage(image),
       fit: BoxFit.cover,
     ),
   );
@@ -22,3 +22,7 @@ BoxDecoration boxDecoration({double rd = 0, Color color = transParentColor}) {
     borderRadius: BorderRadius.circular(rd),
   );
 }
+
+// image url
+
+const imageUppendUrl = 'https://image.tmdb.org/t/p/w500';
