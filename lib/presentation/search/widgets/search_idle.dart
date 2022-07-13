@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/saerch/search_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 import 'package:netflix/presentation/widgets/title_widget.dart';
 
@@ -16,12 +19,35 @@ class SearchIdle extends StatelessWidget {
         ),
         space(),
         Expanded(
-          child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) => const TopSearchItem(),
-            separatorBuilder: (context, index) => space(),
-            itemCount: 10,
+          child: BlocBuilder<SearchBloc, SearchState>(
+            builder: (context, state) {
+              return state.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: whiteColor,
+                      ),
+                    )
+                  : state.isError
+                      ? const Center(
+                          child: Text('Error Occured'),
+                        )
+                      : state.idleList.isEmpty
+                          ? const Center(
+                              child: Text('List Is Empty'),
+                            )
+                          : ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final movie = state.idleList[index];
+                                return TopSearchItem(
+                                    imageUrl: movie.backDropPath ?? '',
+                                    title: movie.title ?? 'No tittle');
+                              },
+                              separatorBuilder: (context, index) => space(),
+                              itemCount: state.idleList.length,
+                            );
+            },
           ),
         )
       ],
@@ -30,7 +56,10 @@ class SearchIdle extends StatelessWidget {
 }
 
 class TopSearchItem extends StatelessWidget {
-  const TopSearchItem({Key? key}) : super(key: key);
+  final String title;
+  final String imageUrl;
+  const TopSearchItem({Key? key, required this.imageUrl, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +70,18 @@ class TopSearchItem extends StatelessWidget {
           width: size.width * .4,
           height: 100,
           decoration: BoxDecoration(
-            image: const DecorationImage(
-              image: NetworkImage(
-                  'https://assets-prd.ignimgs.com/2022/05/12/stranger-things-4-poster-1652364986162.jpeg'),
+            image: DecorationImage(
+              image: NetworkImage('$imageUppendUrl$imageUrl'),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         space(),
-        const Expanded(
+        Expanded(
           child: Text(
-            'Movie Name',
-            style: TextStyle(fontSize: 18),
+            title,
+            style: const TextStyle(fontSize: 18),
           ),
         ),
         const Icon(

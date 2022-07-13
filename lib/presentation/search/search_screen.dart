@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/saerch/search_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/debouncer/debouncer.dart';
 import 'package:netflix/presentation/search/widgets/search_idle.dart';
+import 'package:netflix/presentation/search/widgets/search_result.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -8,18 +12,30 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<SearchBloc>(context).add(
+          const Initialize(),
+        );
+      },
+    );
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
             space(),
-            const SearchButton(),
+            SearchButton(),
             space(),
-            const Expanded(
-              //child: SearchResultWidget(),
-              child: SearchIdle(),
-            )
+            Expanded(
+              child: BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  return state.searchResultList.isEmpty
+                      ? const SearchIdle()
+                      : const SearchResultWidget();
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -28,9 +44,11 @@ class SearchScreen extends StatelessWidget {
 }
 
 class SearchButton extends StatelessWidget {
-  const SearchButton({
+  SearchButton({
     Key? key,
   }) : super(key: key);
+
+  final _debouncer = Debouncer(milliseconds: 1 * 600);
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +66,16 @@ class SearchButton extends StatelessWidget {
       style: const TextStyle(
         color: whiteColor,
       ),
+      onChanged: (query) {
+        if (query.isEmpty) {
+          return;
+        }
+        _debouncer.run(() {
+          BlocProvider.of<SearchBloc>(context).add(
+            SearchMovie(movieQuery: query),
+          );
+        });
+      },
     );
   }
 }
