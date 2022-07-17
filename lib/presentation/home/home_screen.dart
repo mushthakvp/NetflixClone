@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/const.dart';
+import 'package:netflix/domain/downloads/models/downloads.dart';
+import 'package:netflix/infrastructure/downloads/downloads_impl.dart';
 import 'package:netflix/presentation/home/widgets/main_backround_image.dart';
 import 'package:netflix/presentation/home/widgets/number_card.dart';
 import 'package:netflix/presentation/widgets/main_card_list.dart';
@@ -14,6 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final Size mediaSize = MediaQuery.of(context).size;
     return SafeArea(
       child: ValueListenableBuilder(
@@ -137,6 +143,13 @@ class ContentAndCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<DownloadsBloc>(context).add(
+          const DownloadsEvent.getDownloadsImage(),
+        );
+      },
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -148,11 +161,23 @@ class ContentAndCards extends StatelessWidget {
           ),
           LimitedBox(
             maxHeight: 200,
-            child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) => const MainCardItems()),
+            child: ValueListenableBuilder(
+              valueListenable: DownloadsRepository.downloadNotifier,
+              builder: (context,List<Downloads> newValue, _) {
+                return ListView.builder(
+                  
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: newValue.length,
+                    itemBuilder: (context, index) {
+                      newValue.shuffle();
+                      final data = newValue[index];
+                      return  MainCardItems(
+                        image: '$imageUppendUrl${data.posterPath!}',
+                      );
+                    },);
+              },
+            ),
           ),
         ],
       ),

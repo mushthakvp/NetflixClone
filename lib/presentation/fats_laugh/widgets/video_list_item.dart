@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:netflix/application/fast_laugh/fast_laugh_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
-import 'package:netflix/presentation/fats_laugh/functions/functions.dart';
+import 'package:netflix/core/const.dart';
+import 'package:netflix/domain/downloads/models/downloads.dart';
 import 'package:netflix/presentation/widgets/space.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
+
+class VideoListItemInheritedWidget extends InheritedWidget {
+  final Widget widget;
+  final Downloads movieData;
+
+  const VideoListItemInheritedWidget(
+      {Key? key, required this.widget, required this.movieData})
+      : super(
+          key: key,
+          child: widget,
+        );
+
+  @override
+  bool updateShouldNotify(covariant VideoListItemInheritedWidget oldWidget) {
+    return oldWidget.movieData != movieData;
+  }
+
+  static VideoListItemInheritedWidget? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<VideoListItemInheritedWidget>();
+  }
+}
 
 class VideoListItem extends StatelessWidget {
   final int index;
@@ -9,10 +35,15 @@ class VideoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final posterPath =
+        VideoListItemInheritedWidget.of(context)?.movieData.posterPath;
+
+    final videoUrl = dummyVideoUrls[index % dummyVideoUrls.length];
     return Stack(
       children: [
-        Container(
-          color: Colors.accents[index],
+        FastLaughVideoPlayer(
+          videoUrl: videoUrl,
+          onStateChanged: (bool) {},
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -34,16 +65,50 @@ class VideoListItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     CircleAvatar(
-                      backgroundImage:
-                          const AssetImage('assets/images/squidGame.jpg'),
+                      backgroundImage: posterPath == null
+                          ? null
+                          : NetworkImage('$imageUppendUrl$posterPath'),
                       backgroundColor: greyColor.withOpacity(.3),
                       radius: 30,
                     ),
                     space(),
-                    const VideoActions(icon: Icons.emoji_emotions, name: 'LOL'),
+                    ValueListenableBuilder(
+                      valueListenable: likedVideosNotifier,
+                      builder: (BuildContext context, Set<int> likedValue, _) {
+                        final _index = index;
+                        if (likedValue.contains(_index)) {
+                          return GestureDetector(
+                            onTap: () {
+                              likedVideosNotifier.value.remove(_index);
+                              likedVideosNotifier.notifyListeners();
+                            },
+                            child: const VideoActions(
+                              icon: Icons.favorite,
+                              name: 'Liked',
+                              color: redColor,
+                              size: 35,
+                            ),
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            likedVideosNotifier.value.add(_index);
+                            likedVideosNotifier.notifyListeners();
+                          },
+                          child: const VideoActions(
+                              icon: Icons.emoji_emotions, name: 'LOL'),
+                        );
+                      },
+                    ),
                     const VideoActions(icon: Icons.add, name: 'My List'),
-                    const VideoActions(icon: Icons.share, name: 'Share'),
-                    const VideoActions(icon: Icons.play_arrow, name: 'Play'),
+                    GestureDetector(
+                        onTap: () {
+                          Share.share(
+                              'Check out Github repo https://github.com/MushthakVP');
+                        },
+                        child: const VideoActions(
+                            icon: Icons.share, name: 'Share')),
+                    const VideoActions(icon: Icons.play_arrow, name: 'Pause'),
                   ],
                 )
               ],
@@ -57,9 +122,16 @@ class VideoListItem extends StatelessWidget {
 
 class VideoActions extends StatelessWidget {
   final IconData icon;
+  final double size;
   final String name;
-  const VideoActions({Key? key, required this.icon, required this.name})
-      : super(key: key);
+  final Color color;
+  const VideoActions({
+    Key? key,
+    required this.icon,
+    required this.name,
+    this.color = whiteColor,
+    this.size = 30,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +141,8 @@ class VideoActions extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: whiteColor,
+            color: color,
+            size: size,
           ),
           space(he: 5),
           Text(
@@ -77,6 +150,53 @@ class VideoActions extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class FastLaughVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+  final void Function(bool isPlaying) onStateChanged;
+  const FastLaughVideoPlayer(
+      {Key? key, required this.videoUrl, required this.onStateChanged})
+      : super(key: key);
+
+  @override
+  State<FastLaughVideoPlayer> createState() => _FastLaughVideoPlayerState();
+}
+
+class _FastLaughVideoPlayerState extends State<FastLaughVideoPlayer> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _videoPlayerController.initialize().then((value) {
+      setState(() {});
+      _videoPlayerController.play();
+      _videoPlayerController.setLooping(true);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: _videoPlayerController.value.isInitialized
+          ? VideoPlayer(_videoPlayerController)
+          : const Center(
+              child: CircularProgressIndicator(
+                color: whiteColor,
+              ),
+            ),
     );
   }
 }

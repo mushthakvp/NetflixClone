@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
+import 'package:netflix/domain/downloads/models/downloads.dart';
+import 'package:netflix/infrastructure/downloads/downloads_impl.dart';
 
 class MainBackgroundImage extends StatelessWidget {
   const MainBackgroundImage({Key? key}) : super(key: key);
@@ -9,10 +11,16 @@ class MainBackgroundImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          width: double.infinity,
-          height: 600,
-          decoration: boxDecorationImage(image: 'assets/images/paniPat.jpg'),
+        ValueListenableBuilder(
+          valueListenable: DownloadsRepository.downloadNotifier,
+          builder: (context, List<Downloads> newValue, _) {
+            return Container(
+              width: double.infinity,
+              height: 600,
+              decoration:
+                  boxDecorationNetWorkImage(image: '$imageUppendUrl/ox4goZd956BxqJH6iLwhWPL9ct4.jpg'),
+            );
+          },
         ),
         Positioned(
           left: 0,

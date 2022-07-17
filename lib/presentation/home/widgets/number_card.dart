@@ -2,6 +2,8 @@ import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
+import 'package:netflix/domain/downloads/models/downloads.dart';
+import 'package:netflix/infrastructure/home/home_impl.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 import 'package:netflix/presentation/widgets/title_widget.dart';
 
@@ -22,13 +24,22 @@ class NumberContentCards extends StatelessWidget {
           ),
           LimitedBox(
             maxHeight: 200,
-            child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) => NumberCard(
-                      index: index,
-                    )),
+            child: ValueListenableBuilder(
+              valueListenable: HomeImpliment.downloadNotifier,
+              builder: (context, List<Downloads> newValue, _) {
+                return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: newValue.length > 10 ? 10 : newValue.length,
+                    itemBuilder: (context, index) {
+                      final data = newValue[index];
+                      return NumberCard(
+                        data: data,
+                        index: index,
+                      );
+                    });
+              },
+            ),
           ),
         ],
       ),
@@ -36,11 +47,13 @@ class NumberContentCards extends StatelessWidget {
   }
 }
 
-const image = 'assets/images/danGal.jpg';
+
 
 class NumberCard extends StatelessWidget {
   final int index;
-  const NumberCard({Key? key, required this.index}) : super(key: key);
+  final Downloads data;
+  const NumberCard({Key? key, required this.index, required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +67,9 @@ class NumberCard extends StatelessWidget {
               Container(
                 width: 130,
                 height: 200,
-                decoration: boxDecorationImage(
+                decoration: boxDecorationNetWorkImage(
                   rd: 10,
-                  image: image,
+                  image: '$imageUppendUrl${data.posterPath!}',
                 ),
               ),
             ],

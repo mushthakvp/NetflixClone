@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:netflix/application/hot_and_new/hot_and_new_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
-import 'package:netflix/images/images.dart';
+import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
 class ComingSoon extends StatelessWidget {
@@ -8,22 +11,70 @@ class ComingSoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 20,
-      itemBuilder: (context, index) => const ComingSoonWidgetDemo(),
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<HotAndNewBloc>(context).add(
+          const HotAndNewEvent.loadDataInComingSoon(),
+        );
+      },
+    );
+    return BlocBuilder<HotAndNewBloc, HotAndNewState>(
+      builder: (context, state) {
+        return state.isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: whiteColor,
+                ),
+              )
+            : state.isError
+                ? const Center(
+                    child: Text('Error Occured'),
+                  )
+                : state.comingSoonList.isEmpty
+                    ? const Center(
+                        child: Text('List Is Empty'),
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: state.comingSoonList.length,
+                        itemBuilder: (context, index) {
+                          final movie = state.comingSoonList[index];
+
+                          return ComingSoonWidgetDemo(
+                            movieName: '${movie.originalTitle}',
+                            id: '${movie.id}',
+                            month: '${movie.releaseDate}',
+                            backDropPath: '${movie.backdropPath}',
+                            discription: '${movie.overview}',
+                          );
+                        });
+      },
     );
   }
 }
 
 class ComingSoonWidgetDemo extends StatelessWidget {
+  final String id;
+  final String month;
+  final String movieName;
+  final String discription;
+  final String backDropPath;
+
   const ComingSoonWidgetDemo({
     Key? key,
+    required this.discription,
+    required this.id,
+    required this.month,
+    required this.movieName,
+    required this.backDropPath,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final parseDate = DateTime.tryParse(month);
+    final date = DateFormat.MMMMd().format(parseDate!);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Row(
@@ -32,17 +83,17 @@ class ComingSoonWidgetDemo extends StatelessWidget {
           SizedBox(
             width: 50,
             child: Column(
-              children: const [
+              children: [
                 Text(
-                  'FEB',
-                  style: TextStyle(
+                  date.split(' ').first.substring(0, 3).toUpperCase(),
+                  style: const TextStyle(
                     color: greyColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '11',
-                  style: TextStyle(
+                  month.split('-')[1],
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -61,8 +112,8 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                       height: 200,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        image: const DecorationImage(
-                          image: AssetImage(squidgame),
+                        image: DecorationImage(
+                          image: NetworkImage('$imageUppendUrl$backDropPath'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -84,22 +135,26 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                 space(),
                 Row(
                   children: [
-                    const FittedBox(
+                    Expanded(
                       child: Text(
-                        'Squid Game',
-                        style: TextStyle(
-                            fontSize: 35,
+                        movieName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 25,
                             letterSpacing: -2,
                             fontWeight: FontWeight.w900),
                       ),
                     ),
-                    const Spacer(),
                     Column(
                       children: [
                         const Icon(Icons.notifications_none_outlined,
                             color: whiteColor),
                         space(he: 5),
-                        const Text('Remind me'),
+                        const Text(
+                          'Remind me',
+                          style: TextStyle(color: greyColor),
+                        ),
                       ],
                     ),
                     space(),
@@ -107,7 +162,10 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                       children: [
                         const Icon(Icons.info_outline, color: whiteColor),
                         space(he: 5),
-                        const Text('Info'),
+                        const Text(
+                          'Info',
+                          style: TextStyle(color: greyColor),
+                        ),
                       ],
                     ),
                     space()
@@ -127,16 +185,16 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                         ),
                         Image.asset(
                           'assets/images/logo.png',
-                          width: 25,
-                          height: 25,
+                          width: 35,
+                          height: 35,
                         ),
                         const Positioned(
-                          bottom: 5,
-                          left: 18,
+                          bottom: 3,
+                          left: 22,
                           child: Text(
                             'FILM',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                             ),
                           ),
                         )
@@ -145,16 +203,20 @@ class ComingSoonWidgetDemo extends StatelessWidget {
                   ],
                 ),
                 space(he: 5),
-                const Text(
-                  'Squid Game',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                FittedBox(
+                  child: Text(
+                    movieName,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 space(),
-                const Padding(
-                  padding: EdgeInsets.only(right: 8),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
                   child: Text(
-                    'Landing the lead in the school musical is a dream come truee for Jodi untill the pressure sends her confidence - and her relation ship into a tailspin',
-                    style: TextStyle(),
+                    discription,
+                    overflow: TextOverflow.clip,
+                    style: const TextStyle(color: greyColor),
                   ),
                 )
               ],

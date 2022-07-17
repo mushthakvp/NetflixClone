@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:netflix/application/hot_and_new/hot_and_new_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
-import 'package:netflix/images/images.dart';
+import 'package:netflix/domain/hot_and_new/model/hot_and_new_resp.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 
 class EveryonesWatching extends StatelessWidget {
@@ -9,29 +12,60 @@ class EveryonesWatching extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 10,
-      itemBuilder: (context, index) => const VideoMainWidget(),
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<HotAndNewBloc>(context).add(
+          const HotAndNewEvent.loadDataInEveryoneWatching(),
+        );
+      },
+    );
+    return BlocBuilder<HotAndNewBloc, HotAndNewState>(
+      builder: (context, state) {
+        return state.isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: whiteColor,
+                ),
+              )
+            : state.isError
+                ? const Center(
+                    child: Text('Error Occured'),
+                  )
+                : state.everyoneWatchingList.isEmpty
+                    ? const Center(
+                        child: Text('List Is Empty'),
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: state.everyoneWatchingList.length,
+                        itemBuilder: (context, index) {
+                          final data = state.everyoneWatchingList[index];
+                          return VideoMainWidget(data: data);
+                        },
+                      );
+      },
     );
   }
 }
 
 class VideoMainWidget extends StatelessWidget {
-  const VideoMainWidget({
-    Key? key,
-  }) : super(key: key);
+  final HotAndNewData data;
+  const VideoMainWidget({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const VideoCardContent(),
+        VideoCardContent(data: data),
         space(),
         Stack(
           children: [
-            Container(
-                height: 200, decoration: boxDecorationImage(image: squidgame)),
+           data.backdropPath.toString().endsWith('.jpg') ? Container(
+              height: 200,
+              decoration: boxDecorationNetWorkImage(
+                image: '$imageUppendUrl${data.backdropPath}',
+              ),
+            ): Lottie.asset('assets/images/nodata.json'),
             Positioned(
               bottom: 10,
               right: 10,
@@ -105,8 +139,10 @@ class IconTextButton extends StatelessWidget {
 }
 
 class VideoCardContent extends StatelessWidget {
+  final HotAndNewData data;
   const VideoCardContent({
     Key? key,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -116,16 +152,16 @@ class VideoCardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Squid Game',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            data.originalName.toString(),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           space(),
-          const Padding(
-            padding: EdgeInsets.only(right: 10),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
             child: Text(
-              "This hit sitcom follows the merry misadventures of six 20-something pals as they navigate the pitfalls of work life and love in 1990's Manhattan",
-              style: TextStyle(fontSize: 16),
+              data.overview.toString(),
+              style: const TextStyle(fontSize: 16,color: greyColor),
             ),
           ),
         ],

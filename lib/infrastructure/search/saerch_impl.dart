@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:netflix/domain/core/api_end_points.dart';
-import 'package:netflix/domain/search/models/search_resp/search_resp.dart';
+import 'package:netflix/domain/search/models/search_resp.dart';
 import 'package:netflix/domain/core/failures/main_failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:netflix/domain/search/models/search_service.dart';
+import 'package:netflix/domain/search/search_service.dart';
 
 @LazySingleton(as: SearchService)
 class SearchImpl implements SearchService {

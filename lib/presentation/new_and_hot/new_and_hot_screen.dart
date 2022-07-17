@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/downloads/downloads_bloc.dart';
+import 'package:netflix/application/hot_and_new/hot_and_new_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/new_and_hot/widgets/coming_soon.dart';
@@ -10,6 +13,7 @@ class NewHotScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
     return DefaultTabController(
       length: 2,
       child: SafeArea(

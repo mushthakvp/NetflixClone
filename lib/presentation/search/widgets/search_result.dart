@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:netflix/application/saerch/search_bloc.dart';
+import 'package:netflix/application/search/search_bloc.dart';
 import 'package:netflix/core/const.dart';
 import 'package:netflix/presentation/widgets/space.dart';
 import 'package:netflix/presentation/widgets/title_widget.dart';

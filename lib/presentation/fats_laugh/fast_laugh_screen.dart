@@ -24,7 +24,7 @@ class FastLaugh extends StatelessWidget {
                 ? const Center(
                     child: Text('Check your internet Connection'),
                   )
-                : state.videos.isEmpty
+                : state.videoList.isEmpty
                     ? const Center(
                         child: Text('Videos empty'),
                       )
@@ -32,7 +32,17 @@ class FastLaugh extends StatelessWidget {
                         scrollDirection: Axis.vertical,
                         physics: const BouncingScrollPhysics(),
                         children: List.generate(
-                            10, (index) => VideoListItem(index: index)),
+                          state.videoList.length,
+                          (index) {
+                            return VideoListItemInheritedWidget(
+                              widget: VideoListItem(
+                                key: Key(index.toString()),
+                                index: index,
+                              ),
+                              movieData: state.videoList[index],
+                            );
+                          },
+                        ),
                       );
       },
     );

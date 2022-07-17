@@ -16,6 +16,18 @@ BoxDecoration boxDecorationImage(
   );
 }
 
+BoxDecoration boxDecorationNetWorkImage(
+    {double rd = 0, Color color = blackColor, required String image}) {
+  return  BoxDecoration(
+    color: color,
+    borderRadius: BorderRadius.circular(rd),
+    image: DecorationImage(
+      image: NetworkImage(image),
+      fit: BoxFit.cover,
+    ),
+  );
+}
+
 BoxDecoration boxDecoration({double rd = 0, Color color = transParentColor}) {
   return BoxDecoration(
     color: color,
