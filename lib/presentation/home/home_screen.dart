@@ -19,7 +19,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final Size mediaSize = MediaQuery.of(context).size;
     return SafeArea(
       child: ValueListenableBuilder(
@@ -163,19 +162,19 @@ class ContentAndCards extends StatelessWidget {
             maxHeight: 200,
             child: ValueListenableBuilder(
               valueListenable: DownloadsRepository.downloadNotifier,
-              builder: (context,List<Downloads> newValue, _) {
+              builder: (context, List<Downloads> newValue, _) {
                 return ListView.builder(
-                  
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: newValue.length,
-                    itemBuilder: (context, index) {
-                      newValue.shuffle();
-                      final data = newValue[index];
-                      return  MainCardItems(
-                        image: '$imageUppendUrl${data.posterPath!}',
-                      );
-                    },);
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: newValue.length,
+                  itemBuilder: (context, index) {
+                    newValue.shuffle();
+                    final data = newValue[index];
+                    return MainCardItems(
+                      image: '$imageUppendUrl${data.posterPath!}',
+                    );
+                  },
+                );
               },
             ),
           ),
